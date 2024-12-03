@@ -52,10 +52,101 @@ with open('D:/Copper modling/trained_Regression_model.pkl', 'rb') as file:
     model = pickle.load(file)
 
 # Unique values and mappings
-unique_customers = df['customer'].unique()
-unique_product_refs = df['product_ref'].unique()
-unique_country_code = df['country'].unique()
-unique_apps = df['application'].unique()
+#unique_customers = df['customer'].unique()
+unique_product_refs = unique_product_refs = {
+    640665: 0,
+    1721130331: 1,
+    1693867563: 2,
+    1671876026: 3,
+    1670798778: 4,
+    1665584662: 5,
+    628377: 6,
+    640405: 7,
+    1671863738: 8,
+    640400: 9,
+    929423819: 10,
+    164141591: 11,
+    1690738206: 12,
+    628117: 13,
+    1693867550: 14,
+    1332077137: 15,
+    628112: 16,
+    1722207579: 17,
+    164336407: 18,
+    164337175: 19,
+    1668701725: 20,
+    1282007633: 21,
+    1668701376: 22,
+    1665572374: 23,
+    1668701718: 24,
+    1690738219: 25,
+    1668701698: 26,
+    1665572032: 27,
+    1665584320: 28,
+    1665584642: 29,
+    611993: 30,
+    611733: 31,
+    611728: 32
+}
+
+#unique_product_refs_reverse = {v: k for k, v in unique_product_refs.items()}
+
+unique_country_code = {
+    89.0: 0,
+    40.0: 1,
+    80.0: 2,
+    79.0: 3,
+    39.0: 4,
+    77.0: 5,
+    78.0: 6,
+    26.0: 7,
+    27.0: 8,
+    28.0: 9,
+    32.0: 10,
+    25.0: 11,
+    107.0: 12,
+    30.0: 13,
+    84.0: 14,
+    38.0: 15,
+    113.0: 16
+}
+
+#unique_country_code_reverse = {v: k for k, v in unique_country_code.items()}
+
+unique_apps = {
+    58.0: 0,
+    68.0: 1,
+    59.0: 2,
+    56.0: 3,
+    28.0: 4,
+    69.0: 5,
+    22.0: 6,
+    25.0: 7,
+    4.0: 8,
+    15.0: 9,
+    40.0: 10,
+    3.0: 11,
+    66.0: 12,
+    20.0: 13,
+    39.0: 14,
+    10.0: 15,
+    5.0: 16,
+    26.0: 17,
+    27.0: 18,
+    67.0: 19,
+    19.0: 20,
+    29.0: 21,
+    2.0: 22,
+    65.0: 23,
+    70.0: 24,
+    79.0: 25,
+    42.0: 26,
+    41.0: 27,
+    38.0: 28,
+    99.0: 29
+}
+
+#unique_apps_reverse = {v: k for k, v in unique_apps.items()}
 
 item_type_map = {
     5: 'W', 6: 'WI', 3: 'S', 1: 'Others', 2: 'PL', 0: 'IPL', 4: 'SLAWR'
@@ -67,6 +158,8 @@ item_type_map1 = {
 }
 item_type_map_reverse = {v: k for k, v in item_type_map.items()}
 item_type_map1_reverse = {v: k for k, v in item_type_map1.items()}
+
+
 
 # Sidebar menu
 with st.sidebar:
@@ -103,13 +196,17 @@ if select == "Prediction Models":
         col1, col2 = st.columns(2)
         with col1:
             quantity_tons = st.number_input("Quantity (tons):", min_value=2, max_value=151, step=1)
-            customer = st.selectbox("Customer:", options=unique_customers)
-            product_ref = st.selectbox("Product Reference:", options=unique_product_refs)
-            country = st.selectbox("Country:", options=unique_country_code)
+            #customer = st.selectbox("Customer:", options=unique_customers)
+            #product_ref = st.selectbox("Product Reference:", options=unique_product_refs)
+            #country = st.selectbox("Country:", options=unique_country_code)
+            product_ref = st.selectbox("Product Reference", options=list(unique_product_refs.keys()))
+            selected_value = unique_product_refs[product_ref]
+            country = st.selectbox("Country:", options=list(unique_country_code.keys()))
             item_type_label = st.selectbox("Item Type:", options=list(item_type_map.values()))
 
         with col2:
-            application = st.selectbox("Application:", options=unique_apps)
+            #application = st.selectbox("Application:", options=unique_apps)
+            application = st.selectbox("Application::", options=list(unique_apps.keys()))
             thickness = st.number_input("Thickness (mm):", min_value=0.18, max_value=6.45, step=0.01)
             width = st.number_input("Width (mm):", min_value=700, max_value=1980, step=1)
             selling_price = st.number_input("Selling Price:", min_value=243.0, max_value=1379.0, step=0.1)
@@ -119,14 +216,14 @@ if select == "Prediction Models":
         if st.button("Predict Status"):
             input_data = pd.DataFrame({
                 "quantity tons": [quantity_tons],
-                "customer": [customer],
-                "country": [country],
+                #"customer": [customer],
                 "item type": [item_type_map_reverse[item_type_label]],
-                "application": [application],
                 "thickness": [thickness],
                 "width": [width],
-                "product_ref": [product_ref],
                 "selling_price": [selling_price],
+                "product_ref_encode": [selected_value],
+                "country_encoded": unique_country_code[country],
+                "application_encoded": unique_apps[application],
                 "lead_time": [lead_time],
             })
             try:
@@ -144,13 +241,14 @@ if select == "Prediction Models":
         
         with col1:
             quantity_tons = st.number_input("Quantity (tons):", min_value=2, max_value=151, step=1,key="input1")
-            customer = st.selectbox("Customer:", options=unique_customers,key="input2")
-            product_ref = st.selectbox("Product Reference:", options=unique_product_refs,key="input3")
-            country = st.selectbox("Country:", options=unique_country_code,key="input4")
+            #customer = st.selectbox("Customer:", options=unique_customers,key="input2")
+            product_ref_encode = st.selectbox("Product Reference", options=list(unique_product_refs.keys()),key="input2")
+            selected_value = unique_product_refs[product_ref_encode]
+            country = st.selectbox("Country:", options=list(unique_country_code.keys()),key="input4")
             item_type_label = st.selectbox("Item Type:", options=list(item_type_map.values()),key="input5")
             
         with col2:
-            application = st.selectbox("Application:", options=unique_apps,key="input6")
+            application = st.selectbox("Application::", options=list(unique_apps.keys()),key="input6")
             thickness = st.number_input("Thickness (mm):", min_value=0.18, max_value=6.45, step=0.01,key="input7")
             width = st.number_input("Width (mm):", min_value=700, max_value=1980, step=1,key="input8")
             status = st.selectbox("status:", options=list(item_type_map1.values()),key="input10")
@@ -160,14 +258,14 @@ if select == "Prediction Models":
         if st.button("Predict Status",key="input11"):
             input_data = pd.DataFrame({
                 "quantity tons": [quantity_tons],
-                "customer": [customer],
-                "country": [country],
+                #"customer": [customer],
                 "status":[item_type_map1_reverse[status]],
                 "item type": [item_type_map_reverse[item_type_label]],
-                "application": [application],
                 "thickness": [thickness],
-                "width": [width],
-                "product_ref": [product_ref],
+                "width": [width], 
+                "product_ref_encode": unique_product_refs[product_ref],
+                "country_encoded": unique_country_code[country],
+                "application_encoded": unique_apps[application],
                 "lead_time": [lead_time],
             })
             try:
