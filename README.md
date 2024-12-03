@@ -24,10 +24,16 @@ Creating a Streamlit page where you can insert each column value and get the Sel
 Requirements
 
 This project requires the following libraries to be installed:
+
 NumPy
+
 Pandas
+
 Scikit-learn
+
 Streamlit
+
+
 
 Getting Started
 
