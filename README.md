@@ -51,6 +51,6 @@ BATCH: MTDE04
 
 DOMAIN : DATA SCIENCE
 
-LINKED IN URL :www.linkedin.com/in/shakthi-sivani-g-939658294](https://www.linkedin.com/in/subbulakshmi-s-15b489171
+LINKED IN URL :https://www.linkedin.com/in/subbulakshmi-s-15b489171
 
 
