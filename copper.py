@@ -148,16 +148,14 @@ unique_apps = {
 
 #unique_apps_reverse = {v: k for k, v in unique_apps.items()}
 
-item_type_map = {
-    5: 'W', 6: 'WI', 3: 'S', 1: 'Others', 2: 'PL', 0: 'IPL', 4: 'SLAWR'
-}
-item_type_map1 = {
-    0: 'Lost', 1: 'Won', 2: 'Draft', 3: 'To be approved',
-    4: 'Not lost for AM', 5: 'Wonderful', 6: 'Revised',
-    7: 'Offered', 8: 'Offerable'
-}
-item_type_map_reverse = {v: k for k, v in item_type_map.items()}
-item_type_map1_reverse = {v: k for k, v in item_type_map1.items()}
+item_type_map = {'WI':0, 'PL':1, 'Others':2, 'IPL':3, 'S':4,
+                                 'W':5, 'SLAWR':6}
+
+item_type_map1 = {'Lost':0, 'Won':1, 'Draft':2, 'To be approved':5, 'Not lost for AM':3,
+                                 'Wonderful':8, 'Revised':4, 'Offered':6, 'Offerable':7}
+
+#item_type_map_reverse = {v: k for k, v in item_type_map.items()}
+#item_type_map1_reverse = {v: k for k, v in item_type_map1.items()}
 
 
 
@@ -202,7 +200,7 @@ if select == "Prediction Models":
             product_ref = st.selectbox("Product Reference", options=list(unique_product_refs.keys()))
             selected_value = unique_product_refs[product_ref]
             country = st.selectbox("Country:", options=list(unique_country_code.keys()))
-            item_type_label = st.selectbox("Item Type:", options=list(item_type_map.values()))
+            item_type_label = st.selectbox("Item Type:", options=list(item_type_map.keys()))
 
         with col2:
             #application = st.selectbox("Application:", options=unique_apps)
@@ -217,13 +215,13 @@ if select == "Prediction Models":
             input_data = pd.DataFrame({
                 "quantity tons": [quantity_tons],
                 #"customer": [customer],
-                "item type": [item_type_map_reverse[item_type_label]],
+                "item type": item_type_map[item_type_label],
                 "thickness": [thickness],
                 "width": [width],
-                "selling_price": [selling_price],
-                "product_ref_encode": [selected_value],
+                "selling_price": [selling_price], 
                 "country_encoded": unique_country_code[country],
                 "application_encoded": unique_apps[application],
+                "product_ref_encode": [selected_value],
                 "lead_time": [lead_time],
             })
             try:
@@ -245,13 +243,13 @@ if select == "Prediction Models":
             product_ref_encode = st.selectbox("Product Reference", options=list(unique_product_refs.keys()),key="input2")
             selected_value = unique_product_refs[product_ref_encode]
             country = st.selectbox("Country:", options=list(unique_country_code.keys()),key="input4")
-            item_type_label = st.selectbox("Item Type:", options=list(item_type_map.values()),key="input5")
+            item_type_label = st.selectbox("Item Type:", options=list(item_type_map.keys()),key="input5")
             
         with col2:
             application = st.selectbox("Application::", options=list(unique_apps.keys()),key="input6")
             thickness = st.number_input("Thickness (mm):", min_value=0.18, max_value=6.45, step=0.01,key="input7")
             width = st.number_input("Width (mm):", min_value=700, max_value=1980, step=1,key="input8")
-            status = st.selectbox("status:", options=list(item_type_map1.values()),key="input10")
+            status = st.selectbox("status:", options=list(item_type_map1.keys()),key="input10")
             lead_time = st.number_input("Lead Time:", min_value=1, max_value=448, step=1,key="input9")
             
         st.markdown("<h3 class='section-header'>Prediction Result</h3>", unsafe_allow_html=True)
@@ -259,13 +257,13 @@ if select == "Prediction Models":
             input_data = pd.DataFrame({
                 "quantity tons": [quantity_tons],
                 #"customer": [customer],
-                "status":[item_type_map1_reverse[status]],
-                "item type": [item_type_map_reverse[item_type_label]],
+                "status":item_type_map1[status],
+                "item type": item_type_map[item_type_label],
                 "thickness": [thickness],
                 "width": [width], 
-                "product_ref_encode": unique_product_refs[product_ref],
                 "country_encoded": unique_country_code[country],
                 "application_encoded": unique_apps[application],
+                "product_ref_encode": unique_product_refs[product_ref],
                 "lead_time": [lead_time],
             })
             try:
