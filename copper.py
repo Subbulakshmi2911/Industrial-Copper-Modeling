@@ -151,7 +151,7 @@ unique_apps = {
 item_type_map = {'WI':0, 'PL':1, 'Others':2, 'IPL':3, 'S':4,
                                  'W':5, 'SLAWR':6}
 
-item_type_map1 = {'Lost':0, 'Won':1, 'Draft':2, 'To be approved':5, 'Not lost for AM':3,
+item_type_map1 = {'Lost':1, 'Won':2, 'Draft':0, 'To be approved':5, 'Not lost for AM':3,
                                  'Wonderful':8, 'Revised':4, 'Offered':6, 'Offerable':7}
 
 #item_type_map_reverse = {v: k for k, v in item_type_map.items()}
